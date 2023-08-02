@@ -16,7 +16,7 @@ This repository contains the code for our paper [GDCurer: An AI-assisted Drug Do
 
 ## Overview
 
-We propose an AI-assisted drug dosage prediction system for Graves' Disease. GDCurer is capable of predicting the optimal dosage of idonine-131 by leveraging  the patient's thyroid scintigraph (TS), iodine uptake (IU) information, and the half-life of $^{131}$I (HL). To address the issue of lacking accurate drug dosages in the training data due to the bias introduced by clinicans, a novel machine learning method is developed to exploit the treatment information to correct the bias. Furthermore, GDCurer is designed as a lifelong learner which can continously learn from new clinical data by incorporating the techniques of experience replay (ER) and feature distillation (FD).
+We propose an AI-assisted drug dosage prediction system for Graves' Disease. GDCurer is capable of predicting the optimal dosage of idonine-131 (I-131) by leveraging  the patient's thyroid scintigraph (TS), iodine uptake (IU) information, and the half-life of I-131 (HL). To address the issue of lacking accurate drug dosages in the training data due to the bias introduced by clinicans, a novel machine learning method is developed to exploit the treatment information to correct the bias. Furthermore, GDCurer is designed as a lifelong learner which can continously learn from new clinical data by incorporating the techniques of experience replay (ER) and feature distillation (FD).
 
 ![](figures/GDcurer.png)
 
