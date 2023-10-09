@@ -1,6 +1,6 @@
 # GDCurer: An AI-assisted Drug Dosage Prediction System for Graves' Disease
 
-This repository contains the code for our paper [GDCurer: An AI-assisted Drug Dosage Prediction System for Graves' Disease](#) by <a href="https://linhaowei1.github.io/"> Haowei Lin</a>, Zhao Chen, Lei Kang, and <a href="https://majianzhu.com/"> Jianzhu Ma.
+This repository contains the code for our paper [GDCurer: An AI-assisted Drug Dosage Prediction System for Graves' Disease](#) by [Haowei Lin](https://linhaowei1.github.io), Zhao Chen, Jianhua Zhu, Wenpeng Huang, Ritai Na, Yongkang Qiu, Jing Zhao, Sichen Yin, Xiaodong Li, Rongfu Wang, [Jianzhu Ma](https://majianzhu.com), Lei Kang.
 
 
 ## Quick Links
@@ -72,7 +72,7 @@ If you have any questions related to the code or the paper, feel free to email [
 Please cite our paper if you use GDCurer in your work:
 
 ```bibtex
-@inproceedings{lin2023gdcurer,
+@misc{lin2023gdcurer,
    title={GDCurer: An AI-assisted Drug Dosage Prediction System for Graves' Disease},
    author={Lin, Haowei and Chen, Zhao and Kang, Lei and Ma, Jianzhu},
    year={2023}
