@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <title>{{bar_display.title_name}}</title>
+
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+    <!-- Favicons -->
+    <link type="image/x-icon" href="{% static '/assets/img/yp_favicon.png' %}" rel="icon">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+    <link href={% static "bootstrap/css/bootstrap.min.css" %} rel="stylesheet" type="text/css" />
+    <link href={% static "assets/css/plugins.css" %} rel="stylesheet" type="text/css" />
+    <!-- END GLOBAL MANDATORY STYLES -->
+
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link href={% static "assets/css/users/user-profile.css" %} rel="stylesheet" type="text/css" />
+    <!--  END CUSTOM STYLE FILE  -->
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+
+    {% block add_css_file %}
+
+    {% endblock %}
+
+</head>
+
+<body>
+
+    <!--  BEGIN NAVBAR  -->
+    <div class="header-container fixed-top">
+        <header class="header navbar navbar-expand-sm">
+
+            <ul class="navbar-item theme-brand flex-row  text-center">
+                <!-- <li class="nav-item theme-logo">
+                    <a href="/">
+                        <img src={% static "assets/img/logo.jpg" %} class="navbar-logo" alt="logo">
+                    </a>
+                </li> -->
+                <li class="nav-item theme-text">
+                    <a href="/" class="nav-link"> GDCurer System</a>
+                </li>
+            </ul>
+
+
+            <ul class="navbar-item flex-row ml-md-auto">
+                <div>
+                    <h2>{{person.name}}</h2>
+                </div>
+                <li class="nav-item dropdown user-profile-dropdown">
+                    <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="userProfileDropdown"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <img src="/media/avatar/person.jpg" alt="avatar">
+                    </a>
+                    <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">
+                        <div class="">
+                            <div class="dropdown-item">
+                                <a href="/">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="feather feather-home">
+                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                    </svg>
+                                    Homepage
+                                </a>
+                            </div>
+                            <div class="dropdown-item">
+                                <a class="" href="/logout/"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                        class="feather feather-log-out">
+                                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                        <polyline points="16 17 21 12 16 7"></polyline>
+                                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                                    </svg>
+                                    Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </header>
+    </div>
+    <div class="sub-header-container">
+        <header class="header navbar navbar-expand-sm expand-header">
+            <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="feather feather-menu">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg></a>
+
+            <ul class="navbar-nav flex-row">
+                <li>
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h3>{% block page_title %}GDCurer Inference{% endblock page_title %}</h3>
+                        </div>
+                    </div>
+                </li>
+                {% if bar_display.help_message %}
+                <li>
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h3>
+                                <a data-toggle="tooltip" data-placement="bottom" data-html="true" title="{{bar_display.help_message}}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                        class="bi bi-question-circle-fill" viewBox="0 0 22 22">
+                                        <path
+                                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.496 6.033h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286a.237.237 0 0 0 .241.247zm2.325 6.443c.61 0 1.029-.394 1.029-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94 0 .533.425.927 1.01.927z" />
+                                    </svg>
+                                </a>
+                            </h3>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+        </header>
+    </div>
+    <!--  END NAVBAR  -->
+
+    <!--  BEGIN MAIN CONTAINER  -->
+    <div class="main-container" id="container">
+
+        <div class="overlay"></div>
+        <div class="search-overlay"></div>
+        <div class="sidebar-wrapper sidebar-theme">
+
+            <nav id="sidebar">
+                <div class="shadow-bottom"></div>
+                <ul class="list-unstyled menu-categories ps ps--active-y" id="accordionExample">
+        
+                    <li class="menu">
+                        <a href="/performance/" aria-expanded="false" class="dropdown-toggle">
+                            <div class="">
+                                <!-- home -->
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    class="feather feather-home">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                                <span>Performance</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="menu">
+                        <a href="/training/" aria-expanded="false" class="dropdown-toggle">
+                            <div class="">
+                                <!-- layers -->
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                    class="feather feather-layers">
+                                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                                    <polyline points="2 17 12 22 22 17"></polyline>
+                                    <polyline points="2 12 12 17 22 12"></polyline>
+                                </svg>
+                                <span>Training</span>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="menu">
+                        <a href="/" aria-expanded="false" class="dropdown-toggle">
+                            <div class="">
+                                <!-- feedbacks -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="21 8 21 21 3 21 3 8" />
+                                    <rect x="1" y="3" width="22" height="5" />
+                                    <line x1="10" y1="12" x2="14" y2="12" />
+                                </svg>
+                                <span>Inference</span>
+                            </div>
+                        </a>
+                    </li>
+                    
+                </ul>
+        
+            </nav>
+        </div>
+        {% block mainpage %}
+
+        {% endblock %}
+    </div>
+    <!-- END MAIN CONTAINER -->
+
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-section f-section-1">
+                <p class=''> </p>
+            </div>
+            <div class="footer-section f-section-2">
+                <p class="">Copyright © 2022 Introduction to Database Systems(Honor Track), All rights <a href="/">Reserved </a>.</p>
+            </div>
+            <!--
+            <div class="footer-section f-section-2">
+                <p class="">Coded with <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg></p>
+            </div>
+            -->
+        </div>
+    </footer>
+
+    {% block load_js_file %}
+    <!-- BEGIN GLOBAL MANDATORY SCRIPTS -->
+    <script src={% static "assets/js/libs/jquery-3.1.1.min.js" %}></script>
+    <script src={% static "bootstrap/js/popper.min.js" %}></script>
+    <script src={% static "bootstrap/js/bootstrap.min.js" %}></script>
+    <script src={% static "datetimepicker/js/moment-with-locales.min.js" %}></script>
+    <script src={% static "plugins/perfect-scrollbar/perfect-scrollbar.min.js" %}></script>
+    <script src={% static "assets/js/app.js" %}></script>
+
+    <script>
+        $(document).ready(function () {
+            App.init();
+        });
+    </script>
+
+    <script>
+        $(function () { $("[data-toggle='tooltip']").tooltip(); });
+    </script>
+    <script src={% static "assets/js/custom.js" %}></script>
+    <!-- END GLOBAL MANDATORY SCRIPTS -->
+    {% endblock %}
+
+    {% block add_js_file %}
+
+    {% endblock %}
+
+
+</body>
+
+</html>

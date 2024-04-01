@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block add_css_file %}
+<style type="text/css">
+    .text-truncate-container {
+        width: 100%;
+    }
+
+    .text-truncate-container p {
+        -webkit-line-clamp: 3;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .text-end {
+        text-align: right !important;
+    }
+</style>
+<style>
+    select[readonly] {
+        background: #eee;
+        /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+        pointer-events: none;
+        touch-action: none;
+    }
+</style>
+{% endblock %}
+
+{% block mainpage %}
+
+<!--  BEGIN CONTENT AREA  -->
+<div id="content" class="main-content">
+    <div class="container">
+        {% if html_display.warn_code == 1 %}
+        <div class="alert alert-warning  text-center">{{ html_display.warn_message }}</div>
+        {% elif html_display.warn_code == 2 %}
+        <div class="alert alert-success  text-center">{{ html_display.warn_message }}</div>
+        {% endif %}
+        <div class="row layout-top-spacing">
+            <!-- 我要留言 -->
+            <div class="col-6 layout-top-spacing">
+                <div>
+                    <div class="bio layout-spacing pb-0">
+                        <div class="widget-content widget-content-area">
+                            <div class="col-12 col-xl-12 col-lg-12 mb-xl-4 mb-4 mt-0 pb-2">
+                                <div class="">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h4>Inference Result</h4>
+                                            <h6>
+                                                ID: {% if new_prediction %} {{ new_prediction.patient_id.pid }} | {{ new_prediction.created_time }}{% endif %}
+                                            </h6>
+                                            <p style="color: rgb(66, 67, 68);">
+                                                <i class="fa fa-bell" style="width: 14px;"></i>
+                                                <span class="ml-1">Half-life of I-131 (day): {% if new_prediction %} {{ new_prediction.half_life }}{% endif %}</span>
+                                            </p>
+                                            <p style="color: rgb(66, 67, 68);">
+                                                <i class="fa fa-bell" style="width: 14px;"></i>
+                                                <span class="ml-1">Maximum I-131 Uptake (6h): {% if new_prediction %} {{ new_prediction.max_uptake }}{% endif %}</span>
+                                            </p>
+                                            <p style="color: rgb(66, 67, 68);">
+                                                <i class="fa fa-share-alt" style="width: 14px;"></i>
+                                                <span class="ml-1">Predicted Dosage (mCi): {% if new_prediction %} {{ new_prediction.predicted_dosage }}{% endif %}</span>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            {% if new_prediction %}
+                                            <img src="/media/dicom/{{new_prediction.dicom_img}}" width="155" height="155">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="bio layout-spacing mt-0">
+                        <div class="widget-content widget-content-area">
+                            <div class="container mt-1 pb-3">
+                                <h4>GDCurer Inference</h4>
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="fullName">Patient ID:</label>
+                                        <input type="text" class="form-control" id="ID" name="ID" required="required"
+                                            placeholder="Please input the ID...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fullName">Half-life of I-131 (day): </label>
+                                        <input type="text" oninput="checkFloat(event)" class="form-control" id="half_I" name="half" required="required"
+                                            placeholder="Please input the half-life...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fullName">Maximum I-131 Uptake (6h):</label>
+                                        <input type="text" oninput="checkFloat(event)" class="form-control" id="uptake" name="uptake" required="required"
+                                            placeholder="Please input the Uptake...">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="image">Upload Dicom image: </label>
+                                        <div class="custom-file">
+                                            <input onchange="showFilenameLocal(this.files)" type="file" required="required"
+                                                class="custom-file-input" id="inputGroupFile01" accept="image/*" name="img"
+                                                >
+                                            <label class="custom-file-label" for="inputGroupFile01"
+                                                id="upload_annouce_photo">Choose file</label>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-info mt-4 btn-block" name="Inference" value="Inference">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 layout-top-spacing">
+                <div class="bio layout-spacing">
+                    <div class="widget-content widget-content-area pb-4">
+                        <div class="col-lg-12 col-md-5 col-sm-12 pb-0">
+                            <div class="pb-0" id="feedback-welcome">
+                                <div class="pricing-header px-3 py-3 pb-md-4">
+                                    <!-- <h1 class="display-4 my-4 mb-4">元培生活</h1> -->
+                                    <h4 class="text-center mb-2">
+                                        Prediction History
+                                    </h4>
+                                    <p style="text-indent:2em;">Your history of using GDCurer to predict dosage will be
+                                        shown here.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-12 mt-0">
+                            <div id="publicFeedbackTab" class="tab-content">
+                                <div class="bio-skill-box pb-0 align-items-center"
+                                    style="height: 500px; width: 500px;  overflow-y: scroll; overflow-x: hidden;" id="publicFeedbackBox">
+                                    {% if my_predictions %}
+                                    <div id="public-feedback" class="row">
+                                        {% for prediction in my_predictions %}
+                                        <div class="col-12 col-xl-12 col-lg-12 mb-xl-4 mb-4 ">
+                                            <div class="b-skills"
+                                                onclick="window.location.href = '/modifyFeedback?fid={{feedback.fid}}' ;">
+                                                <div class="d-flex justify-content-between">
+                                                    <div>
+                                                        <h5>
+                                                            <a>ID: {{ prediction.patient_id.pid }}</a>
+                                                        </h5>
+                                                        <h6>
+                                                            {{prediction.created_time}}
+                                                        </h6>
+                                                        <p style="color: rgb(66, 67, 68);">
+                                                            <i class="fa fa-bell" style="width: 14px;"></i>
+                                                            <span class="ml-1">Half-life of I-131 (day):
+                                                                {{ prediction.half_life }}</span>
+                                                        </p>
+                                                        <p style="color: rgb(66, 67, 68);">
+                                                            <i class="fa fa-bell" style="width: 14px;"></i>
+                                                            <span class="ml-1">Maximum I-131 Uptake (6h):
+                                                                {{ prediction.max_uptake}}</span>
+                                                        </p>
+                                                        <p style="color: rgb(66, 67, 68);">
+                                                            <i class="fa fa-share-alt" style="width: 14px;"></i>
+                                                            <span class="ml-1">Predicted Dosage (mCi):
+                                                                {{ prediction.predicted_dosage}}</span>
+                                                        </p>
+                                                        <p
+                                                            style="color: rgb(66, 67, 68); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; ">
+                                                            <i class="fa fa-envelope" style="width: 14px;"></i>
+                                                            <span class="ml-1">Doctor:
+                                                                {{ prediction.poster.name}}</span>
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <img src="/media/dicom/{{prediction.dicom_img}}" width="155"
+                                                            height="155">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% else %}
+                                    <div style="margin-top: 32%;" id="noPublicFeedback">
+                                        <p style="text-align: center;">There is nothing.</p>
+                                        <br>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!--  END CONTENT AREA  -->
+<script>
+    function showFilenameLocal(files) {
+        var text = "";
+        for (i = 0; i < files.length; i++) {
+            text += (" " + files[i].name);
+        }
+        $("#upload_annouce_photo").html(text);
+    }
+</script>
+<script>
+    function checkFloat(event) {
+      var input = event.target;
+      var value = input.value;
+      if (!/^\d+(\.\d+)?$/.test(value)) {
+        input.setCustomValidity('请输入浮点数');
+      } else {
+        input.setCustomValidity('');
+      }
+    }
+  </script>
+{% endblock %}
+
+{% block add_js_file %}
+<script src={% static "plugins/dropify/dropify.min.js" %}></script>
+<script src={% static "assets/js/users/account-settings.js" %}></script>
+<script src={% static "chart.js" %}></script>
+{% endblock %}

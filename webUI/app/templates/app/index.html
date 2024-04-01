@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to login page</title>
+</head>
+<body>
+<h1>Welcome to app, {{user.username}}</h1>
+<form action="" method="post">
+{% csrf_token %}
+    <input type="submit" name="logout" value="Logout" />
+</form>
+</body>
+</html>

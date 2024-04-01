@@ -11,6 +11,7 @@ This repository contains the code for our paper [GDCurer: An AI-assisted Drug Do
     - [Data](#data)
     - [Standard Training Experiments](#standard-training-experiments)
     - [Lifelong Training Experiments](#lifelong-training-experiments)
+  - [GDCurer Web App](#gdcurer-web-app)
   - [Bugs or Questions?](#bugs-or-questions)
   - [Citation](#citation)
 
@@ -62,6 +63,10 @@ To run lifelong learning experiments with 4 training phases, simply run
 ```bash
 CUDA_VISIBLE_DEVICES=${your_cuda_device_id} bash scripts/lifelong.sh
 ```
+
+## GDCurer Web App
+We've built a web app on GDCurer using [Django](https://github.com/django/django) and [MySQL](https://dev.mysql.com/downloads/mysql/). You can build it through the [webUI](./webUI/).
+
 
 ## Bugs or questions?
 

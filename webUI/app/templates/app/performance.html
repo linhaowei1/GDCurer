@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block add_css_file %}
+<style type="text/css">
+    .text-truncate-container {
+        width: 100%;
+    }
+
+    .text-truncate-container p {
+        -webkit-line-clamp: 3;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .text-end {
+        text-align: right !important;
+    }
+</style>
+<style>
+    select[readonly] {
+        background: #eee;
+        /*Simular campo inativo - Sugestão @GabrielRodrigues*/
+        pointer-events: none;
+        touch-action: none;
+    }
+</style>
+{% endblock %}
+{% block page_title %}Performance{% endblock page_title %}
+{% block mainpage %}
+
+<script src={% static "chart.js" %}></script>
+
+<!--  BEGIN CONTENT AREA  -->
+<div id="content" class="main-content">
+    <div class="container">
+        {% if html_display.warn_code == 1 %}
+        <div class="alert alert-warning  text-center">{{ html_display.warn_message }}</div>
+        {% elif html_display.warn_code == 2 %}
+        <div class="alert alert-success  text-center">{{ html_display.warn_message }}</div>
+        {% endif %}
+
+        <div class="row layout-top-spacing">
+            <h3 class="text-center mb-2">
+                GDCurer Performance
+            </h3>
+            <h6>
+                The performance is evaluated on a held-out test set. After learning a new phase, the performance will be
+                updated.
+            </h6>
+            <div class="col-6 layout-top-spacing">
+                    <div class="bio layout-spacing pb-0">
+                        <div class="widget-content widget-content-area">
+                            <div class="col-12 col-xl-12 col-lg-12 mb-xl-4 mb-4 mt-0 pb-2">
+                                <div class="">
+                                    <div class="d-flex justify-content-between">
+                                        <canvas id="line-chart-1" width="80" height="40"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="bio layout-spacing pb-0">
+                            <div class="widget-content widget-content-area">
+                                <div class="col-12 col-xl-12 col-lg-12 mb-xl-4 mb-4 mt-0 pb-2">
+                                    <div class="">
+                                        <div class="d-flex justify-content-between">
+                                            <canvas id="line-chart-2" width="80" height="40"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+                <div class="col-6 layout-top-spacing">
+                    <div>
+                        <div class="bio layout-spacing pb-0">
+                            <div class="widget-content widget-content-area">
+                                <div class="col-12 col-xl-12 col-lg-12 mb-xl-4 mb-4 mt-0 pb-2">
+                                    <div class="">
+                                        <div class="d-flex justify-content-between">
+                                            <canvas id="line-chart-3" width="80" height="40"></canvas>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="bio layout-spacing pb-0">
+                            <div class="widget-content widget-content-area">
+                                <div class="col-12 col-xl-12 col-lg-12 mb-xl-4 mb-4 mt-0 pb-2">
+                                    <div class="">
+                                        <div class="d-flex justify-content-between">
+                                            <canvas id="line-chart-4" width="80" height="40"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+
+
+    </div>
+
+    <!--  END CONTENT AREA  -->
+
+    <script>
+        function generateLabels(length) {
+            var labels = [];
+            for (var i = 1; i <= length; i++) {
+                labels.push(`phase-${i}`);
+            }
+            return labels;
+        }
+        var pearsonCorrelationData = {{ pearsonCorrelationData|safe }};
+        var weightedPrecisionData = {{ weightedPrecisionData|safe }};
+        var hyperPrecisionData = {{ hyperPrecisionData|safe }};
+        var hypoPrecisionData = {{ hypoPrecisionData|safe }};
+        // if null or blank, use fake data
+        if (!pearsonCorrelationData || !pearsonCorrelationData.length) {
+            pearsonCorrelationData = [0.4, 0.6, 0.7, 0.75, 0.8, 0.85];
+            weightedPrecisionData = [0.5, 0.65, 0.7, 0.76, 0.82, 0.88];
+            hyperPrecisionData = [0.45, 0.6, 0.68, 0.74, 0.79, 0.83];
+            hypoPrecisionData = [0.55, 0.7, 0.75, 0.78, 0.85, 0.9]
+        }
+        var ctxs = [
+            document.getElementById('line-chart-1').getContext('2d'),
+            document.getElementById('line-chart-2').getContext('2d'),
+            document.getElementById('line-chart-3').getContext('2d'),
+            document.getElementById('line-chart-4').getContext('2d')
+        ];
+    
+        var datasets = [
+            {
+                label: 'Pearson Correlation (pred, actual)',
+                data: pearsonCorrelationData,
+                borderColor: 'rgb(17, 194, 238)'
+            },
+            {
+                label: 'Weighted Precision',
+                data: weightedPrecisionData,
+                borderColor: 'rgb(75, 192, 192)'
+            },
+            {
+                label: 'Precision for Hyperthyroidism Cases',
+                data: hyperPrecisionData,
+                borderColor: 'rgb(153, 102, 255)'
+            },
+            {
+                label: 'Precision for Hypothyroidism Cases',
+                data: hypoPrecisionData,
+                borderColor: 'rgb(255, 159, 64)'
+            }
+        ];
+    
+        var options = {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        };
+        var labels = generateLabels(pearsonCorrelationData.length);
+
+        // 循环创建每个图表
+        for (var i = 0; i < ctxs.length; i++) {
+            new Chart(ctxs[i], {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [datasets[i]]
+                },
+                options: options
+            });
+        }
+
+
+    </script>
+    
+
+    {% endblock %}

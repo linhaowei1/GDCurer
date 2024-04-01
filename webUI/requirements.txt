@@ -1,0 +1,23 @@
+# -*- coding: utf-8 -*-
+# Django
+django>=4.2
+djangorestframework
+
+# For database
+django_mysql
+pymysql
+mysqlclient
+
+# General
+openpyxl
+xlwt
+pandas
+numpy
+tqdm
+
+## ImageField depends
+pillow
+
+# For communication
+requests
+rpyc

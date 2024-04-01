@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block mainpage %}
+
+<!--  BEGIN CONTENT AREA  -->
+<div id="content" class="main-content">
+
+    <!--  BEGIN CUSTOM STYLE FILE  -->
+    <link rel="stylesheet" type="text/css" href="{% static " plugins/dropify/dropify.min.css" %}">
+    <link href="{% static " assets/css/users/account-setting.css" %}" rel="stylesheet" type="text/css" />
+    <!--  END CUSTOM STYLE FILE  -->
+
+    <div class="container">
+        {% if bar_display.warn_code == 2 %}
+        <div class="alert alert-success  text-center">{{bar_display.warn_message}}</div>
+        {% elif bar_display.warn_code == 1%}
+        <div class="alert alert-warning  text-center">{{bar_display.warn_message}}</div>
+        {% endif %}
+        <div class="row layout-top-spacing">
+
+            <div class="col-lg-12 col-sm-12 col-12 layout-spacing">
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+
+                        <div class="statbox widget box box-shadow">
+
+                            <!--  BEGIN HEADER AREA  -->
+                            <div class="widget-header">
+                                <div class="row">
+                                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                                        <br>
+                                        <br>
+                                        <div align="center">
+                                            <h3>Upload Training Data</h3>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <h4></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  BEGIN CONTENT AREA  -->
+                            <div class="widget-content widget-content-area">
+                                <form role="form" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <h6>Patient ID:</h6>
+                                        <textarea type="text" name="ID" class="form-control" aria-label="Default"
+                                            placeholder="Please input the ID:" rows="1"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <h6>Patient age:</h6>
+                                        <input type="number" min=0 name="age" class="form-control" aria-label="Default"
+                                            placeholder="Please input the age of patient:"></input>
+                                    </div>
+                                    <div class="form-group">
+                                        <h6>Half-life of I-131 (day):</h6>
+                                        <input type="text" oninput="checkFloat(event)" class="form-control" id="half_I"
+                                            name="half" required="required" placeholder="Please input the half-life...">
+                                    </div>
+                                    <div class="form-group">
+                                        <h6> Maximum I-131 Uptake (6h):</h6>
+                                        <input type="text" oninput="checkFloat(event)" class="form-control" id="uptake"
+                                            name="uptake" required="required" placeholder="Please input the Uptake...">
+                                    </div>
+                                    <div class="form-group">
+                                        <h6> Upload Dicom image: </h6>
+                                        <div class="custom-file">
+                                            <input onchange="showFilenameLocal(this.files)" type="file"
+                                                required="required" class="custom-file-input" id="inputGroupFile01"
+                                                accept="image/*" name="img">
+                                            <label class="custom-file-label" for="inputGroupFile01"
+                                                id="upload_annouce_photo">Choose file</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <h6> Label: </h6>
+                                        <select class="form-control"  name="label">
+                                            <option selected>Normal</option>
+                                            <option>Hypothyroidsm</option>
+                                            <option>Hyperthyroidsm</option>
+                                        </select>
+                                    </div>
+                                    <div align="center">
+                                        <button type="submit" class="btn btn-primary btn-lg mb-4 mr-2"
+                                            value="directly_submit" name="add_train"
+                                            onclick="return confirm('Confirm submission of training data?')">Upload</button>
+                                    </div>
+                                </form>
+                                <br>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  END CONTENT AREA  -->
+<script>
+    function showFilenameLocal(files) {
+        var text = "";
+        for (i = 0; i < files.length; i++) {
+            text += (" " + files[i].name);
+        }
+        $("#upload_annouce_photo").html(text);
+    }
+</script>
+<script>
+    function checkFloat(event) {
+        var input = event.target;
+        var value = input.value;
+        if (!/^\d+(\.\d+)?$/.test(value)) {
+            input.setCustomValidity('请输入浮点数');
+        } else {
+            input.setCustomValidity('');
+        }
+    }
+</script>
+
+{% endblock %}
+{% block add_js_file %}
+<script src={% static "plugins/dropify/dropify.min.js" %}></script>
+<script src={% static "assets/js/users/account-settings.js" %}></script>
+{% endblock %}
